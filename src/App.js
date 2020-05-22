@@ -1,19 +1,41 @@
 import React, { useEffect, useRef } from 'react';
 import './App.css';
 
-import { schema } from 'prosemirror-schema-basic';
+import { nodes, marks } from 'prosemirror-schema-basic';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { undo, redo, history } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 import { baseKeymap } from 'prosemirror-commands';
-import { DOMParser } from 'prosemirror-model';
+import { DOMParser, Schema } from 'prosemirror-model';
 
 function App() {
   const editor = useRef();
 
+  const newNodes = Object.assign({}, nodes, {
+    video: {
+      inline: true,
+      attrs: { src: {} },
+      group: 'inline',
+      parseDOM: [
+        {
+          tag: 'video[src]',
+          getAttrs(dom) {
+            return { src: dom.getAttribute('src') };
+          },
+        },
+      ],
+      toDOM(node) {
+        const { src } = node.attrs;
+        return ['video', { src, controls: true }];
+      },
+    },
+  });
+
+  const schema = new Schema({ nodes: newNodes, marks });
+
   useEffect(() => {
-    let state = EditorState.create({
+    const state = EditorState.create({
       schema,
       doc: schema.node('doc', null, [
         schema.node('paragraph', null, [schema.text('One.')]),
@@ -26,7 +48,8 @@ function App() {
         keymap(baseKeymap),
       ],
     });
-    let view = new EditorView(editor.current, {
+
+    const view = new EditorView(editor.current, {
       state,
       dispatchTransaction(transaction) {
         console.log(
@@ -65,6 +88,14 @@ function App() {
           }}>
           parse editor
         </button>
+      </div>
+      <div>
+        text
+        <video
+          src="http://172.17.28.119:8080/video/p/api/video.php?a=display&f=tddM2F&ac=MHwxMDN8NTcxfDA="
+          controls
+        />
+        text
       </div>
     </div>
   );
