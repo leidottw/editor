@@ -17,12 +17,13 @@ function App() {
   const editor = useRef();
   const [pmState, setPmState] = useState();
   const [pmView, setPmView] = useState();
+  const [tooltip, setTooltip] = useState(null);
 
   useEffect(() => {
     const plugins = [
       history(),
       keymap({ ...baseKeymap, 'Mod-z': undo, 'Mod-y': redo }),
-      linkTooltip(),
+      linkTooltip(setTooltip),
     ];
 
     const state = EditorState.create({
@@ -56,6 +57,9 @@ function App() {
         setPmState(newState);
         setPmView(view);
       },
+      // nodeViews: {
+      //   link: (node, view, getPos) => new LinkView(node, view, getPos),
+      // },
     });
     setPmView(view);
   }, []);
@@ -84,6 +88,8 @@ function App() {
         `}
         ref={editor}
       />
+      {tooltip ? <Link {...tooltip} /> : null}
+      <div id="popupContainer" />
       <div style={{ margin: '10px 0' }}>
         <button
           onClick={() => {
@@ -102,3 +108,43 @@ function App() {
 }
 
 export default App;
+
+const Link = ({ top, left }) => {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top,
+        left,
+      }}>
+      123
+    </div>
+  );
+};
+
+// class LinkView {
+//   constructor(node, view, getPos) {
+//     this.dom = document.createElement('a');
+//     this.dom.setAttribute('href', node.attrs.href);
+//     this.dom.setAttribute('title', node.attrs.title);
+//   }
+//   update(node, decorations) {
+//     console.log(node, decorations);
+//     console.log('update');
+//     return false;
+//   }
+//   // selectNode() {
+//   //   this.dom.classList.add('ProseMirror-selectednode');
+//   //   console.log('1234');
+//   //   console.log(arguments);
+//   // }
+//   // deselectNode() {
+//   //   this.dom.classList.remove('ProseMirror-selectednode');
+//   // }
+//   // setSelection(anchor, head, root) {
+//   //   console.log(anchor, head);
+//   // }
+//   // destroy() {
+//   //   console.log('destroy');
+//   // }
+// }
