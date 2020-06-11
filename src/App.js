@@ -23,7 +23,7 @@ function App() {
     const plugins = [
       history(),
       keymap({ ...baseKeymap, 'Mod-z': undo, 'Mod-y': redo }),
-      linkTooltip(setTooltip),
+      // linkTooltip(setTooltip),
     ];
 
     const state = EditorState.create({
@@ -42,25 +42,32 @@ function App() {
     });
     setPmState(state);
 
-    const view = new EditorView(editor.current, {
-      state,
-      dispatchTransaction(transaction) {
-        console.log(
-          'Document size went from',
-          transaction.before.content.size,
-          'to',
-          transaction.doc.content.size,
-        );
-        let newState = view.state.apply(transaction);
-        view.updateState(newState);
+    const view = new EditorView(
+      { mount: editor.current },
+      {
+        state,
+        dispatchTransaction(transaction) {
+          console.log(
+            'Document size went from',
+            transaction.before.content.size,
+            'to',
+            transaction.doc.content.size,
+          );
+          let newState = view.state.apply(transaction);
+          view.updateState(newState);
 
-        setPmState(newState);
-        setPmView(view);
+          setPmState(newState);
+          setPmView(view);
+        },
+        nodeViews: {
+          link: (node, view, getPos) => new LinkView(node, view, getPos),
+        },
+        transformPastedHTML(text) {
+          console.log(text);
+          return text;
+        },
       },
-      // nodeViews: {
-      //   link: (node, view, getPos) => new LinkView(node, view, getPos),
-      // },
-    });
+    );
     setPmView(view);
   }, []);
 
@@ -79,11 +86,12 @@ function App() {
           padding: '0 10px',
           flexGrow: 1,
           overflowY: 'auto',
-          display: 'flex',
+          whiteSpace: 'pre-wrap',
         }}
         css={`
-          .ProseMirror {
-            flex-grow: 1;
+          & p {
+            margin: 0;
+            line-height: 1.5;
           }
         `}
         ref={editor}
@@ -122,29 +130,30 @@ const Link = ({ top, left }) => {
   );
 };
 
-// class LinkView {
-//   constructor(node, view, getPos) {
-//     this.dom = document.createElement('a');
-//     this.dom.setAttribute('href', node.attrs.href);
-//     this.dom.setAttribute('title', node.attrs.title);
-//   }
-//   update(node, decorations) {
-//     console.log(node, decorations);
-//     console.log('update');
-//     return false;
-//   }
-//   // selectNode() {
-//   //   this.dom.classList.add('ProseMirror-selectednode');
-//   //   console.log('1234');
-//   //   console.log(arguments);
-//   // }
-//   // deselectNode() {
-//   //   this.dom.classList.remove('ProseMirror-selectednode');
-//   // }
-//   // setSelection(anchor, head, root) {
-//   //   console.log(anchor, head);
-//   // }
-//   // destroy() {
-//   //   console.log('destroy');
-//   // }
-// }
+class LinkView {
+  constructor(node, view, getPos) {
+    this.dom = document.createElement('a');
+    this.dom.setAttribute('href', node.attrs.href);
+    this.dom.setAttribute('title', node.attrs.title);
+  }
+  update(node, decorations) {
+    console.log(node, decorations);
+    console.log('update');
+    return true;
+    // return false;
+  }
+  selectNode() {
+    this.dom.classList.add('ProseMirror-selectednode');
+    console.log('1234');
+    console.log(arguments);
+  }
+  deselectNode() {
+    this.dom.classList.remove('ProseMirror-selectednode');
+  }
+  setSelection(anchor, head, root) {
+    console.log(anchor, head);
+  }
+  destroy() {
+    console.log('destroy');
+  }
+}

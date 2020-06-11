@@ -3,53 +3,34 @@ import { Schema } from 'prosemirror-model';
 import Color from 'color';
 
 const DEFAULT_COLOR_LIST = ['initial', 'inherit', 'windowtext'];
-const newNodes = schema.spec.nodes
-  .update('code_block', {
-    content: 'block+',
-    marks: '',
-    group: 'block',
-    code: true,
-    defining: true,
-    parseDOM: [
-      { tag: 'pre', preserveWhitespace: 'full' },
-      { tag: 'div[data-codeblock]' },
-    ],
-    toDOM() {
-      return [
-        'pre',
-        {
-          style: `
+const newNodes = schema.spec.nodes.update('code_block', {
+  content: 'block+',
+  marks: '',
+  group: 'block',
+  code: true,
+  defining: true,
+  parseDOM: [
+    { tag: 'pre', preserveWhitespace: 'full' },
+    { tag: 'div[data-codeblock]' },
+  ],
+  toDOM() {
+    return [
+      'pre',
+      {
+        style: `
           padding: 8px;
           border: 1px solid rgba(0,0,0,.14902);
           background: #fbfaf8;
           font-size: 12px;
           color: #333;
           border-radius: 4px;
+          overflow: auto;
         `,
-        },
-        ['code', 0],
-      ];
-    },
-  })
-  .append({
-    video: {
-      inline: true,
-      attrs: { src: {} },
-      group: 'inline',
-      parseDOM: [
-        {
-          tag: 'video[src]',
-          getAttrs(dom) {
-            return { src: dom.getAttribute('src') };
-          },
-        },
-      ],
-      toDOM(node) {
-        const { src } = node.attrs;
-        return ['video', { src, controls: true }];
       },
-    },
-  });
+      ['code', 0],
+    ];
+  },
+});
 
 const newMarks = schema.spec.marks.append({
   u: {
