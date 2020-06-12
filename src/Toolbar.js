@@ -1,6 +1,7 @@
 import React from 'react';
 import 'styled-components/macro';
 import { toggleMark } from 'prosemirror-commands';
+import { wrapInList } from 'prosemirror-schema-list';
 
 const Toolbar = ({ state, view }) => {
   if (!state || !view) return null;
@@ -8,9 +9,7 @@ const Toolbar = ({ state, view }) => {
   return (
     <div style={{ display: 'flex' }}>
       <MenuButton
-        select={(() => {
-          return toggleMark(state.schema.marks.strong)(state);
-        })()}
+        select={toggleMark(state.schema.marks.strong)(state)}
         active={(() => {
           const { from, $from, to, empty } = state.selection;
           if (empty) {
@@ -27,9 +26,7 @@ const Toolbar = ({ state, view }) => {
         <b>B</b>
       </MenuButton>
       <MenuButton
-        select={(() => {
-          return toggleMark(state.schema.marks.em)(state);
-        })()}
+        select={toggleMark(state.schema.marks.em)(state)}
         active={(() => {
           const { from, $from, to, empty } = state.selection;
           if (empty) {
@@ -46,9 +43,7 @@ const Toolbar = ({ state, view }) => {
         <i>I</i>
       </MenuButton>
       <MenuButton
-        select={(() => {
-          return toggleMark(state.schema.marks.u)(state);
-        })()}
+        select={toggleMark(state.schema.marks.u)(state)}
         active={(() => {
           const { from, $from, to, empty } = state.selection;
           if (empty) {
@@ -63,6 +58,38 @@ const Toolbar = ({ state, view }) => {
           view.focus();
         }}>
         <span style={{ textDecoration: 'underline' }}>U</span>
+      </MenuButton>
+      <MenuButton
+        select={wrapInList(state.schema.nodes.ordered_list)(state)}
+        // active={(() => {
+        //   console.log(state);
+        //   const { from, $from, to, empty } = state.selection;
+        //   // console.log(state.doc.nodeAt(from));
+        //   console.log($from);
+        //   if (empty) {
+        //   }
+        //   return false;
+        // })()}
+        onClick={(e) => {
+          wrapInList(state.schema.nodes.ordered_list)(state, view.dispatch);
+          view.focus();
+        }}>
+        ol
+      </MenuButton>
+      <MenuButton
+        select={wrapInList(state.schema.nodes.bullet_list)(state)}
+        // active={(() => {
+        //   console.log(state);
+        //   const { from, $from, to, empty } = state.selection;
+        //   if (empty) {
+        //   }
+        //   return true;
+        // })()}
+        onClick={(e) => {
+          wrapInList(state.schema.nodes.bullet_list)(state, view.dispatch);
+          view.focus();
+        }}>
+        ul
       </MenuButton>
     </div>
   );

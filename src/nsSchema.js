@@ -1,9 +1,14 @@
 import { schema } from 'prosemirror-schema-basic';
 import { Schema } from 'prosemirror-model';
+import { addListNodes } from 'prosemirror-schema-list';
 import Color from 'color';
 
 const DEFAULT_COLOR_LIST = ['initial', 'inherit', 'windowtext'];
-const newNodes = schema.spec.nodes.update('code_block', {
+const newNodes = addListNodes(
+  schema.spec.nodes,
+  'paragraph block*',
+  'block',
+).update('code_block', {
   content: 'block+',
   marks: '',
   group: 'block',

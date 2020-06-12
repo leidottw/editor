@@ -6,7 +6,19 @@ import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { undo, redo, history } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
-import { baseKeymap } from 'prosemirror-commands';
+import {
+  baseKeymap,
+  chainCommands,
+  newlineInCode,
+  createParagraphNear,
+  liftEmptyBlock,
+  splitBlock,
+} from 'prosemirror-commands';
+import {
+  liftListItem,
+  sinkListItem,
+  splitListItem,
+} from 'prosemirror-schema-list';
 import { DOMParser } from 'prosemirror-model';
 
 import nsSchema from './nsSchema';
@@ -22,7 +34,20 @@ function App() {
   useEffect(() => {
     const plugins = [
       history(),
-      keymap({ ...baseKeymap, 'Mod-z': undo, 'Mod-y': redo }),
+      keymap({
+        ...baseKeymap,
+        Enter: chainCommands(
+          splitListItem(nsSchema.nodes.list_item),
+          newlineInCode,
+          createParagraphNear,
+          liftEmptyBlock,
+          splitBlock,
+        ),
+        Tab: sinkListItem(nsSchema.nodes.list_item),
+        'Shift-Tab': liftListItem(nsSchema.nodes.list_item),
+        'Mod-z': undo,
+        'Mod-y': redo,
+      }),
       // linkTooltip(setTooltip),
     ];
 
