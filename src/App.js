@@ -13,6 +13,7 @@ import {
   createParagraphNear,
   liftEmptyBlock,
   splitBlock,
+  setBlockType,
 } from 'prosemirror-commands';
 import {
   liftListItem,
@@ -43,7 +44,10 @@ function App() {
           liftEmptyBlock,
           splitBlock,
         ),
-        Tab: sinkListItem(nsSchema.nodes.list_item),
+        Tab: chainCommands(
+          sinkListItem(nsSchema.nodes.list_item),
+          insertPlaceholder,
+        ),
         'Shift-Tab': liftListItem(nsSchema.nodes.list_item),
         'Mod-z': undo,
         'Mod-y': redo,
@@ -182,3 +186,35 @@ class LinkView {
     console.log('destroy');
   }
 }
+
+const insertPlaceholder = (state, dispatch, view) => {
+  let isInListItem = false;
+  const { nodeBefore, nodeAfter, parent: node } = state.selection.$from;
+  state.doc.nodesBetween(
+    state.selection.$anchor.pos - 1,
+    state.selection.$anchor.pos,
+    (targetNode) => {
+      if (
+        targetNode.type.name == 'list_item' ||
+        targetNode.type.name == 'check_list_item'
+      )
+        isInListItem = true;
+    },
+  );
+  if (state.selection.empty) {
+    dispatch(state.tr.insertText(String.fromCharCode(9), state.selection.from));
+  } else {
+    if (isInListItem) {
+      dispatch(
+        state.tr.insertText(String.fromCharCode(9), state.selection.from),
+      );
+    } else {
+      const indent = node.attrs.indent ? node.attrs.indent + 1 : 1;
+      return setBlockType(state.schema.nodeType(node.type.name), {
+        ...node.attrs,
+        indent,
+      })(state, dispatch);
+    }
+  }
+  return true;
+};
