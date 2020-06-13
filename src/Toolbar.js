@@ -7,7 +7,17 @@ const Toolbar = ({ state, view }) => {
   if (!state || !view) return null;
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div
+      style={{
+        flexShrink: 0,
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 40px',
+        height: 50,
+        borderTop: '1px solid #dfdfdf',
+        borderBottom: '1px solid #dfdfdf',
+      }}
+    >
       <MenuButton
         select={toggleMark(state.schema.marks.strong)(state)}
         active={(() => {
@@ -22,7 +32,8 @@ const Toolbar = ({ state, view }) => {
         onClick={(e) => {
           toggleMark(state.schema.marks.strong)(state, view.dispatch);
           view.focus();
-        }}>
+        }}
+      >
         <b>B</b>
       </MenuButton>
       <MenuButton
@@ -39,7 +50,8 @@ const Toolbar = ({ state, view }) => {
         onClick={(e) => {
           toggleMark(state.schema.marks.em)(state, view.dispatch);
           view.focus();
-        }}>
+        }}
+      >
         <i>I</i>
       </MenuButton>
       <MenuButton
@@ -56,7 +68,8 @@ const Toolbar = ({ state, view }) => {
         onClick={(e) => {
           toggleMark(state.schema.marks.u)(state, view.dispatch);
           view.focus();
-        }}>
+        }}
+      >
         <span style={{ textDecoration: 'underline' }}>U</span>
       </MenuButton>
       <MenuButton
@@ -99,29 +112,23 @@ const MenuButton = ({ ...rest }) => (
   <button
     {...rest}
     css={`
-      outline: none;
-      border: 1px solid #2f2f2f;
+      outline: 0;
+      border: 0;
       width: 24px;
       height: 24px;
-      margin: 2px;
       font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       cursor: pointer;
       color: #2f2f2f;
+      background: none;
 
       &:hover {
-        background: #ffcc00;
-      }
-
-      &:active {
-        background: #ffee00;
+        opacity: 0.5;
       }
 
       ${({ select }) => !select && `color: gray;`}
-      ${({ active }) => active && `color: #ff0000;`}
-    `}></button>
+      ${({ active }) => active && `color: #00ce70;`}
+    `}
+  ></button>
 );
 
 export default Toolbar;

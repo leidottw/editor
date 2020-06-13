@@ -59,7 +59,7 @@ function App() {
       schema: nsSchema,
       doc: nsSchema.nodeFromJSON(
         JSON.parse(
-          '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","marks":[{"type":"u"}],"text":"fej"},{"type":"text","marks":[{"type":"em"},{"type":"u"}],"text":"fo"},{"type":"text","marks":[{"type":"u"}],"text":"w"},{"type":"text","marks":[{"type":"strong"},{"type":"u"}],"text":"ief"},{"type":"text","text":"11111"}]},{"type":"paragraph","content":[{"type":"text","text":"vgod-vim-cheat-sheet-full.pdf"}]},{"type":"paragraph","content":[{"type":"text","text":"263.64KB"}]},{"type":"paragraph","content":[{"type":"text","text":"lllll"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"u"}],"text":"ftp://www.youtube.com/watch?v=04jAYEp11gQ"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"link","attrs":{"href":"http://localhost:8080/","title":"http://localhost:8080/"}},{"type":"u"}],"text":"http://localhost:8080/"}]},{"type":"paragraph","content":[{"type":"text","text":"ewfwfew"},{"type":"text","marks":[{"type":"superscript"}],"text":"4444"},{"type":"text","text":"ffewfe"},{"type":"text","marks":[{"type":"subscript"}],"text":"43434"},{"type":"text","text":"djsfldjsfos"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"fontSize","attrs":{"fontSize":36}}],"text":"fefwe"},{"type":"text","marks":[{"type":"fontSize","attrs":{"fontSize":36}},{"type":"color","attrs":{"color":"rgb(255, 0, 42)"}}],"text":"few"},{"type":"text","marks":[{"type":"fontSize","attrs":{"fontSize":36}}],"text":"fwe"},{"type":"text","marks":[{"type":"fontSize","attrs":{"fontSize":36}},{"type":"bg","attrs":{"color":"rgb(255, 239, 158)"}}],"text":"fe"},{"type":"text","marks":[{"type":"fontSize","attrs":{"fontSize":36}},{"type":"color","attrs":{"color":"rgb(87, 21, 198)"}},{"type":"bg","attrs":{"color":"rgb(255, 239, 158)"}}],"text":"fe"},{"type":"text","marks":[{"type":"fontSize","attrs":{"fontSize":36}},{"type":"color","attrs":{"color":"rgb(87, 21, 198)"}}],"text":"ef"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"color","attrs":{"color":"rgb(226, 115, 0)"}}],"text":"fwefwefefwfef"},{"type":"text","text":"fw"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"color","attrs":{"color":"rgb(226, 115, 0)"}}],"text":"fwefwefefwfef"},{"type":"text","text":"fw"}]}]}',
+          '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","marks":[{"type":"u"}],"text":"fej"},{"type":"text","marks":[{"type":"em"},{"type":"u"}],"text":"fo"},{"type":"text","marks":[{"type":"u"}],"text":"wief"},{"type":"text","text":"11111"}]},{"type":"paragraph","content":[{"type":"text","text":"vg"},{"type":"text","marks":[{"type":"del"}],"text":"od-vim-cheat-sheet-full.pdf"}]},{"type":"ordered_list","attrs":{"order":1},"content":[{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","text":"fwefwefwf"}]}]}]},{"type":"paragraph","content":[{"type":"hard_break"},{"type":"hard_break"}]},{"type":"ordered_list","attrs":{"order":1},"content":[{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","marks":[{"type":"del"}],"text":"f3423411111111"}]},{"type":"ordered_list","attrs":{"order":1},"content":[{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","marks":[{"type":"del"}],"text":"434"}]}]},{"type":"list_item","content":[{"type":"paragraph","content":[{"type":"text","marks":[{"type":"del"}],"text":"2333"}]}]}]}]}]},{"type":"paragraph","content":[{"type":"text","text":"263.64KB"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"fontSize","attrs":{"fontSize":64}}],"text":"      lllll"}]},{"type":"paragraph","content":[{"type":"hard_break"},{"type":"hard_break"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"link","attrs":{"href":"ftp://www.youtube.com/watch?v=04jAYEp11gQ","title":"null"}}],"text":"ftp://www.youtube.com/watch?v=04jAYEp11gQ"}]},{"type":"paragraph","content":[{"type":"text","text":"        "},{"type":"text","marks":[{"type":"link","attrs":{"href":"http://localhost:8080/","title":"null"}}],"text":"http://localhost:8080/"}]},{"type":"paragraph","content":[{"type":"hard_break"},{"type":"hard_break"}]},{"type":"paragraph","content":[{"type":"text","text":"ewfwfew"},{"type":"text","marks":[{"type":"superscript"}],"text":"4444"},{"type":"text","text":"ffewfe"},{"type":"text","marks":[{"type":"subscript"}],"text":"43434"},{"type":"text","text":"djsfldjsfos"}]},{"type":"paragraph","content":[{"type":"hard_break"},{"type":"hard_break"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"link","attrs":{"href":"http://1111","title":"null"}},{"type":"fontSize","attrs":{"fontSize":36}}],"text":"fefwefewfwe"},{"type":"text","marks":[{"type":"link","attrs":{"href":"http://1111","title":"null"}},{"type":"fontSize","attrs":{"fontSize":36}},{"type":"bg","attrs":{"color":"rgb(255, 239, 158)"}}],"text":"fefe"},{"type":"text","marks":[{"type":"link","attrs":{"href":"http://1111","title":"null"}},{"type":"fontSize","attrs":{"fontSize":36}}],"text":"ef"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"color","attrs":{"color":"rgb(226, 115, 0)"}}],"text":"fwefwefefwfef"},{"type":"text","text":"fw"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"color","attrs":{"color":"rgb(226, 115, 0)"}}],"text":"fwefwefefwfef"},{"type":"text","text":"fw"}]},{"type":"paragraph","content":[{"type":"hard_break"},{"type":"hard_break"}]},{"type":"code_block","content":[{"type":"paragraph","content":[{"type":"text","marks":[{"type":"code"}],"text":"code code code"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"code"}],"text":"    code code"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"code"}],"text":"        code"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"code"}],"text":"    code code"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"code"}],"text":"code code code"}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"code"}],"text":"    fewfwefewf"}]}]},{"type":"paragraph","content":[{"type":"hard_break"},{"type":"hard_break"}]}]}',
         ),
       ),
       // doc: nsSchema.node('doc', null, [
@@ -106,13 +106,15 @@ function App() {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        padding: '0 10px',
-      }}>
+      }}
+    >
+      <h1 style={{ flexShrink: 0, padding: '0 40px', textAlign: 'center' }}>
+        ProseMirror Sandbox
+      </h1>
       <Toolbar state={pmState} view={pmView} />
       <div
         style={{
-          border: '1px solid #2f2f2f',
-          padding: '0 10px',
+          padding: '20px 40px',
           flexGrow: 1,
           overflowY: 'auto',
           whiteSpace: 'pre-wrap',
@@ -136,7 +138,8 @@ function App() {
                 DOMParser.fromSchema(nsSchema).parse(editor.current).toJSON(),
               ),
             );
-          }}>
+          }}
+        >
           parse editor
         </button>
       </div>
@@ -153,7 +156,8 @@ const Link = ({ top, left }) => {
         position: 'absolute',
         top,
         left,
-      }}>
+      }}
+    >
       123
     </div>
   );

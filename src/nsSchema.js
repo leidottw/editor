@@ -36,6 +36,32 @@ const newNodes = addListNodes(
     ];
   },
 });
+// .append({
+//   ul: {
+//     content: '(li|ol|ul)+',
+//     group: 'block',
+//     parseDOM: [{ tag: 'ul' }],
+//     toDOM() {
+//       return ['ul', 0];
+//     },
+//   },
+//   ol: {
+//     content: '(li|ol|ul)+',
+//     group: 'block',
+//     parseDOM: [{ tag: 'ol' }],
+//     toDOM() {
+//       return ['ol', 0];
+//     },
+//   },
+//   li: {
+//     content: 'inline+',
+//     group: 'block',
+//     parseDOM: [{ tag: 'li' }],
+//     toDOM() {
+//       return ['li', 0];
+//     },
+//   },
+// });
 
 const newMarks = schema.spec.marks.append({
   u: {
