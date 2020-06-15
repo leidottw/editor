@@ -6,14 +6,7 @@ import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { undo, redo, history } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
-import {
-  baseKeymap,
-  chainCommands,
-  newlineInCode,
-  createParagraphNear,
-  liftEmptyBlock,
-  splitBlock,
-} from 'prosemirror-commands';
+import { baseKeymap, chainCommands } from 'prosemirror-commands';
 import {
   liftListItem,
   sinkListItem,
@@ -41,10 +34,7 @@ function App() {
         ...baseKeymap,
         Enter: chainCommands(
           splitListItem(nsSchema.nodes.list_item),
-          newlineInCode,
-          createParagraphNear,
-          liftEmptyBlock,
-          splitBlock,
+          baseKeymap['Enter'],
         ),
         Tab: chainCommands(
           sinkListItem(nsSchema.nodes.list_item),
