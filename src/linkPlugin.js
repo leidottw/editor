@@ -1,3 +1,4 @@
+import React from 'react';
 import { Plugin } from 'prosemirror-state';
 
 const isInLink = (state) => {
@@ -41,3 +42,44 @@ export const linkTooltip = (setTooltip) =>
       },
     }),
   });
+
+export const Link = ({ top, left }) => {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top,
+        left,
+      }}>
+      123
+    </div>
+  );
+};
+
+export class LinkView {
+  constructor(node, view, getPos) {
+    this.dom = document.createElement('a');
+    this.dom.setAttribute('href', node.attrs.href);
+    this.dom.setAttribute('title', node.attrs.title);
+  }
+  update(node, decorations) {
+    console.log(node, decorations);
+    console.log('update');
+    return true;
+    // return false;
+  }
+  selectNode() {
+    this.dom.classList.add('ProseMirror-selectednode');
+    console.log('1234');
+    console.log(arguments);
+  }
+  deselectNode() {
+    this.dom.classList.remove('ProseMirror-selectednode');
+  }
+  setSelection(anchor, head, root) {
+    console.log(anchor, head);
+  }
+  destroy() {
+    console.log('destroy');
+  }
+}

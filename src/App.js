@@ -24,7 +24,7 @@ import { JSDOM } from 'jsdom';
 
 import nsSchema from './nsSchema';
 import { insertPlaceholder } from './nsCommand';
-import { linkTooltip } from './nsPlugin';
+import { linkTooltip, Link, LinkView } from './linkPlugin';
 
 import Toolbar from './Toolbar';
 
@@ -115,7 +115,7 @@ function App() {
       <h1 style={{ flexShrink: 0, padding: '0 40px', textAlign: 'center' }}>
         ProseMirror Sandbox
       </h1>
-      <Toolbar state={pmState} view={pmView} />
+      <Toolbar state={pmState} view={pmView} editorRef={editor} />
       <div
         style={{
           padding: '20px 40px',
@@ -132,63 +132,8 @@ function App() {
         ref={editor}
       />
       {tooltip ? <Link {...tooltip} /> : null}
-      <div id="popupContainer" />
-      <div style={{ margin: '10px 0' }}>
-        <button
-          onClick={() => {
-            console.log(DOMParser.fromSchema(nsSchema).parse(editor.current));
-            console.log(
-              JSON.stringify(
-                DOMParser.fromSchema(nsSchema).parse(editor.current).toJSON(),
-              ),
-            );
-          }}>
-          parse editor
-        </button>
-      </div>
     </div>
   );
 }
 
 export default App;
-
-const Link = ({ top, left }) => {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top,
-        left,
-      }}>
-      123
-    </div>
-  );
-};
-
-class LinkView {
-  constructor(node, view, getPos) {
-    this.dom = document.createElement('a');
-    this.dom.setAttribute('href', node.attrs.href);
-    this.dom.setAttribute('title', node.attrs.title);
-  }
-  update(node, decorations) {
-    console.log(node, decorations);
-    console.log('update');
-    return true;
-    // return false;
-  }
-  selectNode() {
-    this.dom.classList.add('ProseMirror-selectednode');
-    console.log('1234');
-    console.log(arguments);
-  }
-  deselectNode() {
-    this.dom.classList.remove('ProseMirror-selectednode');
-  }
-  setSelection(anchor, head, root) {
-    console.log(anchor, head);
-  }
-  destroy() {
-    console.log('destroy');
-  }
-}

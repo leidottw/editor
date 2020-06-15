@@ -1,10 +1,11 @@
 import React from 'react';
 import 'styled-components/macro';
 import { toggleMark } from 'prosemirror-commands';
+import { DOMParser } from 'prosemirror-model';
 import { wrapInList } from 'prosemirror-schema-list';
 import { exclusiveToogleMark } from './nsCommand';
 
-const Toolbar = ({ state, view }) => {
+const Toolbar = ({ state, view, editorRef }) => {
   if (!state || !view) return null;
 
   return (
@@ -161,6 +162,16 @@ const Toolbar = ({ state, view }) => {
           view.focus();
         }}>
         ul
+      </MenuButton>
+      <MenuButton
+        select={true}
+        onClick={() => {
+          const editor = DOMParser.fromSchema(state.schema).parse(
+            editorRef.current,
+          );
+          console.log(editor, JSON.stringify(editor.toJSON()));
+        }}>
+        Parse
       </MenuButton>
     </div>
   );
