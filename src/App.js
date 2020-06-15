@@ -13,7 +13,6 @@ import {
   createParagraphNear,
   liftEmptyBlock,
   splitBlock,
-  setBlockType,
 } from 'prosemirror-commands';
 import {
   liftListItem,
@@ -24,7 +23,9 @@ import { DOMParser } from 'prosemirror-model';
 import { JSDOM } from 'jsdom';
 
 import nsSchema from './nsSchema';
+import { insertPlaceholder } from './nsCommand';
 import { linkTooltip } from './nsPlugin';
+
 import Toolbar from './Toolbar';
 
 function App() {
@@ -53,7 +54,7 @@ function App() {
         'Mod-z': undo,
         'Mod-y': redo,
       }),
-      // linkTooltip(setTooltip),
+      linkTooltip(setTooltip),
     ];
 
     // evernote
@@ -191,35 +192,3 @@ class LinkView {
     console.log('destroy');
   }
 }
-
-const insertPlaceholder = (state, dispatch, view) => {
-  let isInListItem = false;
-  const { nodeBefore, nodeAfter, parent: node } = state.selection.$from;
-  state.doc.nodesBetween(
-    state.selection.$anchor.pos - 1,
-    state.selection.$anchor.pos,
-    (targetNode) => {
-      if (
-        targetNode.type.name == 'list_item' ||
-        targetNode.type.name == 'check_list_item'
-      )
-        isInListItem = true;
-    },
-  );
-  if (state.selection.empty) {
-    dispatch(state.tr.insertText(String.fromCharCode(9), state.selection.from));
-  } else {
-    if (isInListItem) {
-      dispatch(
-        state.tr.insertText(String.fromCharCode(9), state.selection.from),
-      );
-    } else {
-      const indent = node.attrs.indent ? node.attrs.indent + 1 : 1;
-      return setBlockType(state.schema.nodeType(node.type.name), {
-        ...node.attrs,
-        indent,
-      })(state, dispatch);
-    }
-  }
-  return true;
-};

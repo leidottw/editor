@@ -36,32 +36,6 @@ const newNodes = addListNodes(
     ];
   },
 });
-// .append({
-//   ul: {
-//     content: '(li|ol|ul)+',
-//     group: 'block',
-//     parseDOM: [{ tag: 'ul' }],
-//     toDOM() {
-//       return ['ul', 0];
-//     },
-//   },
-//   ol: {
-//     content: '(li|ol|ul)+',
-//     group: 'block',
-//     parseDOM: [{ tag: 'ol' }],
-//     toDOM() {
-//       return ['ol', 0];
-//     },
-//   },
-//   li: {
-//     content: 'inline+',
-//     group: 'block',
-//     parseDOM: [{ tag: 'li' }],
-//     toDOM() {
-//       return ['li', 0];
-//     },
-//   },
-// });
 
 const newMarks = schema.spec.marks.append({
   u: {
@@ -105,13 +79,39 @@ const newMarks = schema.spec.marks.append({
     },
   },
   superscript: {
-    parseDOM: [{ tag: 'sup' }],
+    parseDOM: [
+      { tag: 'sup' },
+      {
+        tag: 'span',
+        getAttrs(dom) {
+          const style = dom.getAttribute('style');
+          if (!style) return false;
+          if (style.indexOf('super') !== -1) {
+            return true;
+          }
+          return false;
+        },
+      },
+    ],
     toDOM(node) {
       return ['sup'];
     },
   },
   subscript: {
-    parseDOM: [{ tag: 'sub' }],
+    parseDOM: [
+      { tag: 'sub' },
+      {
+        tag: 'span',
+        getAttrs(dom) {
+          const style = dom.getAttribute('style');
+          if (!style) return false;
+          if (style.indexOf('sub') !== -1) {
+            return true;
+          }
+          return false;
+        },
+      },
+    ],
     toDOM(node) {
       return ['sub'];
     },

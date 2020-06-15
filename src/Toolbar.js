@@ -2,6 +2,7 @@ import React from 'react';
 import 'styled-components/macro';
 import { toggleMark } from 'prosemirror-commands';
 import { wrapInList } from 'prosemirror-schema-list';
+import { exclusiveToogleMark } from './nsCommand';
 
 const Toolbar = ({ state, view }) => {
   if (!state || !view) return null;
@@ -16,8 +17,7 @@ const Toolbar = ({ state, view }) => {
         height: 50,
         borderTop: '1px solid #dfdfdf',
         borderBottom: '1px solid #dfdfdf',
-      }}
-    >
+      }}>
       <MenuButton
         select={toggleMark(state.schema.marks.strong)(state)}
         active={(() => {
@@ -32,8 +32,7 @@ const Toolbar = ({ state, view }) => {
         onClick={(e) => {
           toggleMark(state.schema.marks.strong)(state, view.dispatch);
           view.focus();
-        }}
-      >
+        }}>
         <b>B</b>
       </MenuButton>
       <MenuButton
@@ -50,8 +49,7 @@ const Toolbar = ({ state, view }) => {
         onClick={(e) => {
           toggleMark(state.schema.marks.em)(state, view.dispatch);
           view.focus();
-        }}
-      >
+        }}>
         <i>I</i>
       </MenuButton>
       <MenuButton
@@ -68,9 +66,69 @@ const Toolbar = ({ state, view }) => {
         onClick={(e) => {
           toggleMark(state.schema.marks.u)(state, view.dispatch);
           view.focus();
-        }}
-      >
+        }}>
         <span style={{ textDecoration: 'underline' }}>U</span>
+      </MenuButton>
+      <MenuButton
+        select={toggleMark(state.schema.marks.del)(state)}
+        active={(() => {
+          const { from, $from, to, empty } = state.selection;
+          if (empty) {
+            return state.schema.marks.del.isInSet(
+              state.storedMarks || $from.marks(),
+            );
+          }
+          return state.doc.rangeHasMark(from, to, state.schema.marks.del);
+        })()}
+        onClick={(e) => {
+          toggleMark(state.schema.marks.del)(state, view.dispatch);
+          view.focus();
+        }}>
+        <span style={{ textDecoration: 'line-through' }}>S</span>
+      </MenuButton>
+      <MenuButton
+        select={exclusiveToogleMark(state.schema.marks.superscript)(state)}
+        active={(() => {
+          const { from, $from, to, empty } = state.selection;
+          if (empty) {
+            return state.schema.marks.superscript.isInSet(
+              state.storedMarks || $from.marks(),
+            );
+          }
+          return state.doc.rangeHasMark(
+            from,
+            to,
+            state.schema.marks.superscript,
+          );
+        })()}
+        onClick={(e) => {
+          exclusiveToogleMark(
+            state.schema.marks.superscript,
+            state.schema.marks.subscript,
+          )(state, view.dispatch);
+          view.focus();
+        }}>
+        X<sup>2</sup>
+      </MenuButton>
+      <MenuButton
+        select={exclusiveToogleMark(state.schema.marks.subscript)(state)}
+        active={(() => {
+          const { from, $from, to, empty } = state.selection;
+          if (empty) {
+            return state.schema.marks.subscript.isInSet(
+              state.storedMarks || $from.marks(),
+            );
+          }
+          return state.doc.rangeHasMark(from, to, state.schema.marks.subscript);
+        })()}
+        onClick={(e) => {
+          exclusiveToogleMark(
+            state.schema.marks.subscript,
+            state.schema.marks.superscript,
+          )(state, view.dispatch);
+          view.focus();
+        }}>
+        X<sub>2</sub>
       </MenuButton>
       <MenuButton
         select={wrapInList(state.schema.nodes.ordered_list)(state)}
@@ -127,8 +185,7 @@ const MenuButton = ({ ...rest }) => (
 
       ${({ select }) => !select && `color: gray;`}
       ${({ active }) => active && `color: #00ce70;`}
-    `}
-  ></button>
+    `}></button>
 );
 
 export default Toolbar;
