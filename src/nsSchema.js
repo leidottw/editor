@@ -1,28 +1,127 @@
-import { schema } from 'prosemirror-schema-basic';
+import { schema, nodes } from 'prosemirror-schema-basic';
 import { Schema } from 'prosemirror-model';
 import { addListNodes } from 'prosemirror-schema-list';
 import Color from 'color';
 
 const DEFAULT_COLOR_LIST = ['initial', 'inherit', 'windowtext'];
-const newNodes = addListNodes(
-  schema.spec.nodes,
-  'paragraph block*',
-  'block',
-).update('code_block', {
-  content: 'block+',
-  marks: '',
-  group: 'block',
-  code: true,
-  defining: true,
-  parseDOM: [
-    { tag: 'pre', preserveWhitespace: 'full' },
-    { tag: 'div[data-codeblock]' },
-  ],
-  toDOM() {
-    return [
-      'pre',
+const newNodes = addListNodes(schema.spec.nodes, 'paragraph block*', 'block')
+  .update('paragraph', {
+    content: 'inline*',
+    group: 'block',
+    attrs: {
+      textAlign: {
+        default: 'left',
+      },
+      indent: {
+        default: 0,
+      },
+    },
+    parseDOM: [
+      { tag: 'p' },
       {
-        style: `
+        tag: 'div',
+        getAttrs(dom) {
+          if (dom.dataset.codeblock) return false;
+          const textAlign = dom.style.textAlign;
+          const matches = dom.style.paddingLeft.match(/^(\d+)px$/);
+          const indent = (matches && +matches[1] / 40) || 0;
+          return { textAlign, indent };
+        },
+      },
+    ],
+    toDOM(node) {
+      return [
+        'div',
+        {
+          style: `text-align: ${node.attrs.textAlign}; padding-left: ${
+            node.attrs.indent * 40
+          }px`,
+        },
+        0,
+      ];
+    },
+  })
+  .update(
+    'heading',
+    Object.assign({}, nodes.heading, {
+      attrs: {
+        level: {
+          default: 1,
+        },
+        textAlign: {
+          default: 'left',
+        },
+      },
+      parseDOM: [
+        {
+          tag: 'h1',
+          getAttrs(dom) {
+            const textAlign = dom.style.textAlign;
+            return { level: 1, textAlign };
+          },
+        },
+        {
+          tag: 'h2',
+          getAttrs(dom) {
+            const textAlign = dom.style.textAlign;
+            return { level: 2, textAlign };
+          },
+        },
+        {
+          tag: 'h3',
+          getAttrs(dom) {
+            const textAlign = dom.style.textAlign;
+            return { level: 3, textAlign };
+          },
+        },
+        {
+          tag: 'h4',
+          getAttrs(dom) {
+            const textAlign = dom.style.textAlign;
+            return { level: 4, textAlign };
+          },
+        },
+        {
+          tag: 'h5',
+          getAttrs(dom) {
+            const textAlign = dom.style.textAlign;
+            return { level: 5, textAlign };
+          },
+        },
+        {
+          tag: 'h6',
+          getAttrs(dom) {
+            const textAlign = dom.style.textAlign;
+            return { level: 6, textAlign };
+          },
+        },
+      ],
+      toDOM(node) {
+        return [
+          'h' + node.attrs.level,
+          {
+            style: `text-align: ${node.attrs.textAlign};`,
+          },
+          0,
+        ];
+      },
+    }),
+  )
+  .update('code_block', {
+    content: 'block+',
+    marks: '',
+    group: 'block',
+    code: true,
+    defining: true,
+    parseDOM: [
+      { tag: 'pre', preserveWhitespace: 'full' },
+      { tag: 'div[data-codeblock]' },
+    ],
+    toDOM() {
+      return [
+        'pre',
+        {
+          style: `
           padding: 8px;
           border: 1px solid rgba(0,0,0,.14902);
           background: #fbfaf8;
@@ -31,11 +130,11 @@ const newNodes = addListNodes(
           border-radius: 4px;
           overflow: auto;
         `,
-      },
-      ['code', 0],
-    ];
-  },
-});
+        },
+        ['code', 0],
+      ];
+    },
+  });
 
 const newMarks = schema.spec.marks.append({
   u: {
