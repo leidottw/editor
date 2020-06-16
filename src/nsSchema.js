@@ -107,34 +107,33 @@ const newNodes = addListNodes(schema.spec.nodes, 'paragraph block*', 'block')
       },
     }),
   )
-  .update('code_block', {
-    content: 'block+',
-    marks: '',
-    group: 'block',
-    code: true,
-    defining: true,
-    parseDOM: [
-      { tag: 'pre', preserveWhitespace: 'full' },
-      { tag: 'div[data-codeblock]' },
-    ],
-    toDOM() {
-      return [
-        'pre',
-        {
-          style: `
-          padding: 8px;
-          border: 1px solid rgba(0,0,0,.14902);
-          background: #fbfaf8;
-          font-size: 12px;
-          color: #333;
-          border-radius: 4px;
-          overflow: auto;
-        `,
-        },
-        ['code', 0],
-      ];
-    },
-  });
+  .update(
+    'code_block',
+    Object.assign({}, nodes.code_block, {
+      parseDOM: [
+        { tag: 'pre', preserveWhitespace: 'full' },
+        { tag: 'div[data-codeblock]', preserveWhitespace: 'full' },
+      ],
+      toDOM() {
+        return [
+          'pre',
+          {
+            style: `
+              padding: 8px;
+              border: 1px solid rgba(0,0,0,.14902);
+              background: #fbfaf8;
+              font-size: 12px;
+              color: #333;
+              border-radius: 4px;
+              overflow: auto;
+            `,
+            spellcheck: false,
+          },
+          ['code', 0],
+        ];
+      },
+    }),
+  );
 
 const newMarks = schema.spec.marks.append({
   u: {
