@@ -1,3 +1,8 @@
 .ProseMirror.ProseMirror-focused {
   outline: 0;
 }
+
+/* todolist */
+ul[data-todo='true'] > li[data-checked='true'] > .list-content > .para {
+  text-decoration: line-through;
+}

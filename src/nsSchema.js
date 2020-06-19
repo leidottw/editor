@@ -4,7 +4,8 @@ import { addListNodes } from 'prosemirror-schema-list';
 import Color from 'color';
 
 const DEFAULT_COLOR_LIST = ['initial', 'inherit', 'windowtext'];
-const newNodes = addListNodes(schema.spec.nodes, 'paragraph block*', 'block')
+let newNodes = addListNodes(schema.spec.nodes, 'paragraph block*', 'block');
+newNodes = newNodes
   .update('paragraph', {
     content: 'inline*',
     group: 'block',
@@ -33,9 +34,11 @@ const newNodes = addListNodes(schema.spec.nodes, 'paragraph block*', 'block')
       return [
         'div',
         {
-          style: `text-align: ${node.attrs.textAlign}; padding-left: ${
-            node.attrs.indent * 40
-          }px`,
+          class: 'para',
+          style: `
+            text-align: ${node.attrs.textAlign};
+            padding-left: ${node.attrs.indent * 40}px;
+          `,
         },
         0,
       ];
@@ -131,6 +134,72 @@ const newNodes = addListNodes(schema.spec.nodes, 'paragraph block*', 'block')
           },
           ['code', 0],
         ];
+      },
+    }),
+  )
+  .update(
+    'bullet_list',
+    Object.assign({}, newNodes.get('bullet_list'), {
+      attrs: { todo: { default: undefined } },
+      parseDOM: [
+        {
+          tag: 'ul',
+          getAttrs(dom) {
+            return { todo: dom.dataset.todo };
+          },
+        },
+      ],
+      toDOM(node) {
+        if (node.attrs.todo !== undefined)
+          return [
+            'ul',
+            { 'data-todo': node.attrs.todo, style: 'list-style-type: none;' },
+            0,
+          ];
+
+        return ['ul', 0];
+      },
+    }),
+  )
+  .update(
+    'list_item',
+    Object.assign({}, newNodes.get('list_item'), {
+      attrs: { checked: { default: undefined } },
+      parseDOM: [
+        {
+          tag: 'li',
+          getAttrs(dom) {
+            console.log(dom);
+            return { checked: dom.dataset.checked };
+          },
+        },
+      ],
+      toDOM(node) {
+        if (node.attrs.checked !== undefined)
+          return [
+            'li',
+            {
+              'data-checked': node.attrs.checked,
+              style: `position: relative;`,
+            },
+            [
+              'input',
+              Object.assign(
+                {
+                  type: 'checkbox',
+                  style: `
+                  position: absolute;
+                  top: 0;
+                  left: -23px;
+                `,
+                },
+                node.attrs.checked === 'true' ? { checked: 'checked' } : {},
+              ),
+            ],
+            ['div', { class: 'list-content' }, 0],
+          ];
+
+        return ['li', 0];
       },
     }),
   );
