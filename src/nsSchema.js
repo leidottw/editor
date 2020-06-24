@@ -140,7 +140,36 @@ newNodes = newNodes
   .update(
     'bullet_list',
     Object.assign({}, newNodes.get('bullet_list'), {
-      attrs: { todo: { default: undefined } },
+      parseDOM: [
+        {
+          tag: 'ul',
+          getAttrs(dom) {
+            if (dom.dataset.todo !== undefined) return false;
+          },
+        },
+      ],
+    }),
+  )
+  .update(
+    'list_item',
+    Object.assign({}, newNodes.get('list_item'), {
+      parseDOM: [
+        {
+          tag: 'li',
+          getAttrs(dom) {
+            if (dom.dataset.checked !== undefined) return false;
+          },
+        },
+      ],
+    }),
+  )
+  .append({
+    check_list: {
+      content: '(check_list | check_list_item)+',
+      group: 'block',
+      attrs: {
+        todo: { default: 'undefined' },
+      },
       parseDOM: [
         {
           tag: 'ul',
@@ -150,59 +179,34 @@ newNodes = newNodes
         },
       ],
       toDOM(node) {
-        if (node.attrs.todo !== undefined)
-          return [
-            'ul',
-            { 'data-todo': node.attrs.todo, style: 'list-style-type: none;' },
-            0,
-          ];
-
-        return ['ul', 0];
+        return [
+          'ul',
+          {
+            'data-todo': node.attrs.todo,
+            style: 'list-style-type: none;',
+          },
+          0,
+        ];
       },
-    }),
-  )
-  .update(
-    'list_item',
-    Object.assign({}, newNodes.get('list_item'), {
+    },
+  })
+  .append({
+    check_list_item: {
+      content: 'paragraph block*',
       attrs: { checked: { default: undefined } },
       parseDOM: [
         {
           tag: 'li',
           getAttrs(dom) {
-            console.log(dom);
             return { checked: dom.dataset.checked };
           },
         },
       ],
       toDOM(node) {
-        if (node.attrs.checked !== undefined)
-          return [
-            'li',
-            {
-              'data-checked': node.attrs.checked,
-              style: `position: relative;`,
-            },
-            [
-              'input',
-              Object.assign(
-                {
-                  type: 'checkbox',
-                  style: `
-                  position: absolute;
-                  top: 0;
-                  left: -23px;
-                `,
-                },
-                node.attrs.checked === 'true' ? { checked: 'checked' } : {},
-              ),
-            ],
-            ['div', { class: 'list-content' }, 0],
-          ];
-
-        return ['li', 0];
+        return ['li', { 'data-checked': node.attrs.checked }, 0];
       },
-    }),
-  );
+    },
+  });
 
 const newMarks = schema.spec.marks.append({
   u: {

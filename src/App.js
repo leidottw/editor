@@ -16,7 +16,7 @@ import { DOMParser } from 'prosemirror-model';
 import { JSDOM } from 'jsdom';
 
 import nsSchema from './nsSchema';
-import { insertPlaceholder } from './nsCommand';
+import { insertPlaceholder, splitCheckListItem } from './nsCommand';
 import { linkTooltip, Link, LinkView } from './linkPlugin';
 
 import Toolbar from './Toolbar';
@@ -36,6 +36,7 @@ function App() {
         ...baseKeymap,
         Enter: chainCommands(
           splitListItem(nsSchema.nodes.list_item),
+          splitCheckListItem(nsSchema.nodes.check_list_item),
           baseKeymap['Enter'],
         ),
         Tab: chainCommands(
@@ -76,10 +77,12 @@ function App() {
         state,
         nodeViews: {
           link: (node, view, getPos) => new LinkView(node, view, getPos),
+          check_list_item: (node, view, getPos) =>
+            new CheckListItemView(node, view, getPos),
         },
         transformPastedHTML(html) {
           // console.log('pastedHTML');
-          // console.log(html);
+          console.log(html);
           // return html;
 
           return transformEvernoteCodeblock(html);
@@ -144,3 +147,30 @@ function App() {
 }
 
 export default App;
+
+class CheckListItemView {
+  constructor(node, view, getPos) {
+    this.node = node;
+    this.outerView = view;
+    this.getPos = getPos;
+    this.dom = document.createElement('li');
+    this.dom.style = 'position: relative;';
+    this.checkbox = document.createElement('div');
+    this.checkbox.style = `
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      top: 0;
+      left: -23px;
+      ${
+        node.attrs.checked === 'true'
+          ? 'background: red;'
+          : 'background: green;'
+      }
+    `;
+
+    this.dom.appendChild(this.checkbox);
+    this.contentDOM = document.createElement('div');
+    this.dom.appendChild(this.contentDOM);
+  }
+}
