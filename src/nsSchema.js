@@ -357,6 +357,29 @@ const newMarks = schema.spec.marks.append({
       return ['span', { style: `background-color: ${node.attrs.color}` }];
     },
   },
+  checkbox: {
+    attrs: { checked: { default: false } },
+    parseDOM: [
+      {
+        tag: 'span',
+        getAttrs(dom) {
+          if (dom.dataset.enTodo === undefined) return false;
+
+          return {
+            checked: dom.innerHTML === '[x]',
+          };
+        },
+      },
+    ],
+    toDOM(node) {
+      return [
+        'span',
+        {
+          'data-en-todo': 'true',
+        },
+      ];
+    },
+  },
 });
 
 const nsSchema = new Schema({

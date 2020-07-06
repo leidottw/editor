@@ -79,6 +79,7 @@ function App() {
           link: (node, view, getPos) => new LinkView(node, view, getPos),
           check_list_item: (node, view, getPos) =>
             new CheckListItemView(node, view, getPos),
+          checkbox: (node, view, getPos) => new Checkbox(node, view, getPos),
         },
         transformPastedHTML(html) {
           // console.log('pastedHTML');
@@ -172,5 +173,13 @@ class CheckListItemView {
     this.dom.appendChild(this.checkbox);
     this.contentDOM = document.createElement('div');
     this.dom.appendChild(this.contentDOM);
+  }
+}
+
+class Checkbox {
+  constructor(node, view, getPos) {
+    this.dom = document.createElement('input');
+    this.dom.type = 'checkbox';
+    if (node.attrs.checked) this.dom.checked = 'true';
   }
 }
