@@ -197,3 +197,11 @@ function canSplitCheckList(doc, pos, depth = 1, typesAfter) {
       baseType ? baseType.type : $pos.node(base + 1).type,
     );
 }
+
+export function removeFormat(state, view) {
+  const tr = state.tr;
+  const { $from, $to } = tr.selection;
+  tr.removeMark($from.pos, $to.pos);
+  tr.setStoredMarks([]);
+  view.dispatch(tr);
+}

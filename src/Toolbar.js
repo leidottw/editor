@@ -3,7 +3,7 @@ import 'styled-components/macro';
 import { toggleMark } from 'prosemirror-commands';
 import { DOMParser } from 'prosemirror-model';
 import { wrapInList } from 'prosemirror-schema-list';
-import { exclusiveToogleMark } from './nsCommand';
+import { exclusiveToogleMark, removeFormat } from './nsCommand';
 
 const Toolbar = ({ state, view, editorRef }) => {
   if (!state || !view) return null;
@@ -173,6 +173,9 @@ const Toolbar = ({ state, view, editorRef }) => {
         }}>
         Parse
       </MenuButton>
+      <MenuButton select={true} onClick={() => removeFormat(state, view)}>
+        remove format
+      </MenuButton>
     </div>
   );
 };
@@ -183,7 +186,6 @@ const MenuButton = ({ ...rest }) => (
     css={`
       outline: 0;
       border: 0;
-      width: 24px;
       height: 24px;
       font-size: 20px;
       cursor: pointer;
