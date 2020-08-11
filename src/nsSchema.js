@@ -23,6 +23,13 @@ newNodes = newNodes
         tag: 'div',
         getAttrs(dom) {
           if (dom.dataset.codeblock) return false;
+          if (
+            dom.hasAttribute('style') &&
+            dom.getAttribute('style').indexOf('--en-codeblock') !== -1
+          ) {
+            return false;
+          }
+
           const textAlign = dom.style.textAlign;
           const matches = dom.style.paddingLeft.match(/^(\d+)px$/);
           const indent = (matches && +matches[1] / 40) || 0;
@@ -116,6 +123,18 @@ newNodes = newNodes
       parseDOM: [
         { tag: 'pre', preserveWhitespace: 'full' },
         { tag: 'div[data-codeblock]', preserveWhitespace: 'full' },
+        {
+          tag: 'div',
+          getAttrs: (dom) => {
+            if (
+              dom.hasAttribute('style') &&
+              dom.getAttribute('style').indexOf('--en-codeblock') !== -1
+            ) {
+              return true;
+            }
+          },
+          preserveWhitespace: 'full',
+        },
       ],
       toDOM() {
         return [
@@ -204,6 +223,41 @@ newNodes = newNodes
       ],
       toDOM(node) {
         return ['li', { 'data-checked': node.attrs.checked }, 0];
+      },
+    },
+  })
+  .append({
+    checkbox: {
+      inline: true,
+      attrs: { checked: { default: false } },
+      group: 'inline',
+      selectable: false,
+      parseDOM: [
+        {
+          tag: 'span',
+          getAttrs(dom) {
+            if (dom.dataset.enTodo === undefined) return false;
+
+            return {
+              checked: dom.innerHTML === '[x]',
+            };
+          },
+        },
+        {
+          tag: 'en-todo',
+          getAttrs(dom) {
+            return { checked: dom.getAttribute('checked') === 'true' };
+          },
+        },
+      ],
+      toDOM(node) {
+        return [
+          'span',
+          {
+            'data-en-todo': true,
+          },
+          node.attrs.checked ? '[x]' : '[]',
+        ];
       },
     },
   });
@@ -355,29 +409,6 @@ const newMarks = schema.spec.marks.append({
     ],
     toDOM(node) {
       return ['span', { style: `background-color: ${node.attrs.color}` }];
-    },
-  },
-  checkbox: {
-    attrs: { checked: { default: false } },
-    parseDOM: [
-      {
-        tag: 'span',
-        getAttrs(dom) {
-          if (dom.dataset.enTodo === undefined) return false;
-
-          return {
-            checked: dom.innerHTML === '[x]',
-          };
-        },
-      },
-    ],
-    toDOM(node) {
-      return [
-        'span',
-        {
-          'data-en-todo': 'true',
-        },
-      ];
     },
   },
 });

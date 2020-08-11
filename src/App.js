@@ -121,8 +121,7 @@ function App() {
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-      }}
-    >
+      }}>
       <h1 style={{ flexShrink: 0, padding: '0 40px', textAlign: 'center' }}>
         ProseMirror Sandbox
       </h1>
@@ -181,5 +180,6 @@ class Checkbox {
     this.dom = document.createElement('input');
     this.dom.type = 'checkbox';
     if (node.attrs.checked) this.dom.checked = 'true';
+    this.dom.onclick = () => false;
   }
 }
