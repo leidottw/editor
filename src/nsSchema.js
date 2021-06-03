@@ -20,7 +20,7 @@ newNodes = newNodes
     parseDOM: [
       { tag: 'p' },
       {
-        tag: 'div',
+        tag: 'div.ns3.para',
         getAttrs(dom) {
           if (dom.dataset.codeblock) return false;
           if (
@@ -41,7 +41,7 @@ newNodes = newNodes
       return [
         'div',
         {
-          class: 'para',
+          class: 'ns3 para',
           style: `
             text-align: ${node.attrs.textAlign};
             padding-left: ${node.attrs.indent * 40}px;
@@ -131,6 +131,8 @@ newNodes = newNodes
               dom.getAttribute('style').indexOf('--en-codeblock') !== -1
             ) {
               return true;
+            } else {
+              return false;
             }
           },
           preserveWhitespace: 'full',
